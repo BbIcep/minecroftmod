@@ -21,7 +21,7 @@ jobs:
 
       - name: Fetch sounds, textures and models from the original jar
         run: |
-          curl -fL -o original.jar "https://github.com/jrt993/123/releases/download/popa/111.jar"
+          curl -fL -o original.jar "Bblcep/minecroftmod/releases/download/assets/111.jar"
           unzip -q -n original.jar 'assets/*' -d src/main/resources
           ls src/main/resources/assets
           du -sh src/main/resources
