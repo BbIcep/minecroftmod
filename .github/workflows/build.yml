@@ -1,0 +1,48 @@
+name: Build client mod
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Fetch sounds, textures and models from the original jar
+        run: |
+          curl -fL -o original.jar "https://github.com/jrt993/123/releases/download/popa/111.jar"
+          unzip -q -n original.jar 'assets/*' -d src/main/resources
+          ls src/main/resources/assets
+          du -sh src/main/resources
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.5.1'
+
+      - name: Build
+        run: gradle build --stacktrace --no-daemon
+
+      - name: Upload jar as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: villager-news-client
+          path: build/libs/villager-news-addon-port-client-*[0-9].jar
+
+      - name: Publish as release "client-latest"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          JAR=$(ls build/libs/villager-news-addon-port-client-*[0-9].jar | head -n 1)
+          gh release delete client-latest --yes --cleanup-tag || true
+          gh release create client-latest "$JAR" --title "Client-only build" --notes "Client-only Villager News. Put the jar into the mods folder."
