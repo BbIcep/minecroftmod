@@ -21,7 +21,7 @@ jobs:
 
       - name: Fetch sounds, textures and models from the original jar
         run: |
-          curl -fL -o original.jar "Bblcep/minecroftmod/releases/download/assets/111.jar"
+          curl -fL -o original.jar "https://github.com/${{ github.repository }}/releases/download/assets/villager-news-addon-port-26.3-TEST-RU.jar"
           unzip -q -n original.jar 'assets/*' -d src/main/resources
           ls src/main/resources/assets
           du -sh src/main/resources
