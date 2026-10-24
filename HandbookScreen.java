@@ -317,10 +317,11 @@ public final class HandbookScreen extends Screen {
          this.addBackButton(left, contentWidth, HandbookScreen.Page.HOME);
       }
    }
-   
-private static String heightLabel(int value) {
+
+   private static String heightLabel(int value) {
       return value == 0 ? "Default" : (value > 0 ? "+" + value + " px up" : (-value) + " px down");
    }
+
    private static String toggleLabel(boolean enabled) {
       return enabled ? "On" : "Off";
    }
