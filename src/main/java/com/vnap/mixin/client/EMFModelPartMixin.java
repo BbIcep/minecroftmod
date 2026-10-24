@@ -88,6 +88,7 @@ public abstract class EMFModelPartMixin {
 
    @Unique
    private boolean vnap$isRainbowNose() {
-      return this instanceof EMFModelPartCustom part && part.id.contains("villager_news_base_fgk6") && RainbowNoseRenderState.active();
+  Object self = this;
+return self instanceof EMFModelPartCustom part && part.id.contains("villager_news_base_fgk6") && RainbowNoseRenderState.active();
    }
 }
