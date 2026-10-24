@@ -39,6 +39,7 @@ public final class VillagerNewsClientSettings {
    public static boolean showSubtitles() {
       return showSubtitles;
    }
+
    public static int subtitleHeight() {
       return subtitleHeight;
    }
@@ -47,6 +48,7 @@ public final class VillagerNewsClientSettings {
       subtitleHeight = Math.max(-50, Math.min(200, value));
       save();
    }
+
    public static synchronized void setShowSubtitles(boolean enabled) {
       showSubtitles = enabled;
       save();
@@ -55,7 +57,7 @@ public final class VillagerNewsClientSettings {
    private static void save() {
       JsonObject root = new JsonObject();
       root.addProperty("showSubtitles", showSubtitles);
-       root.addProperty("subtitleHeight", subtitleHeight);
+      root.addProperty("subtitleHeight", subtitleHeight);
 
       try {
          Files.createDirectories(PATH.getParent());
