@@ -103,7 +103,7 @@ public final class DialogueSubtitleState {
          }
 
          visible.sort(Comparator.comparingDouble(DialogueSubtitleState.VisibleSubtitle::distanceSquared));
-         float y = graphics.guiHeight() - 59.0F;
+                  float y = graphics.guiHeight() - 59.0F - VillagerNewsClientSettings.subtitleHeight();
 
          for (int index = 0; index < Math.min(4, visible.size()); index++) {
             DialogueSubtitleState.VisibleSubtitle subtitle = visible.get(index);
