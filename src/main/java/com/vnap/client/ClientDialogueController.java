@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -217,7 +217,7 @@ public final class ClientDialogueController {
          if (villager.isSleeping() && !state.sleeping) {
             say(villager, "Go to Bed", "bed:" + villager.getUUID(), 600L, false);
          } else if (!villager.isSleeping() && state.sleeping) {
-            long dayTime = level.getDayTime() % 24000L;
+            long dayTime = Math.floorMod(level.getOverworldClockTime(), 24000L)
             if (dayTime < 1500L) {
                say(villager, "Wake Up Naturally", "wake:" + villager.getUUID(), 600L, false);
             } else if (villager.distanceTo(player) < 8.0F) {
@@ -463,7 +463,7 @@ public final class ClientDialogueController {
 
       UUID id = interactedId;
       interactedId = null;
-      if (tradingOpen || minecraft.screen instanceof MerchantScreen || !player.getMainHandItem().isEmpty()) {
+      if (tradingOpen || player.containerMenu instanceof MerchantMenu || !player.getMainHandItem().isEmpty()) {
          return;
       }
 
@@ -488,7 +488,7 @@ public final class ClientDialogueController {
    }
 
    private static void trackTrading(Minecraft minecraft, ClientLevel level, LocalPlayer player) {
-      boolean open = minecraft.screen instanceof MerchantScreen;
+      boolean open = player.containerMenu instanceof MerchantMenu
       if (open && !tradingOpen) {
          tradingOpen = true;
          boughtAny = false;
@@ -733,7 +733,7 @@ public final class ClientDialogueController {
    }
 
    private static String timeContext(ClientLevel level) {
-      long time = level.getDayTime() % 24000L;
+      long time = Math.floorMod(level.getOverworldClockTime(), 24000L)
       if (time < 4000L || time >= 23000L) {
          return "Morning";
       } else if (time < 10000L) {
