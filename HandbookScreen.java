@@ -280,6 +280,17 @@ public final class HandbookScreen extends Screen {
          button.setMessage(Component.literal(toggleLabel(enabled)));
       }).bounds(buttonLeft, y, buttonWidth, 20).build());
       y += 26;
+      this.addText(left, y + 6, labelWidth - 6, Component.literal("Subtitle Height"), false);
+      this.addRenderableWidget(Button.builder(Component.literal(heightLabel(VillagerNewsClientSettings.subtitleHeight())), button -> {
+         int next = VillagerNewsClientSettings.subtitleHeight() + 10;
+         if (next > 200) {
+            next = -50;
+         }
+
+         VillagerNewsClientSettings.setSubtitleHeight(next);
+         button.setMessage(Component.literal(heightLabel(next)));
+      }).bounds(buttonLeft, y, buttonWidth, 20).build());
+      y += 26;
       this.addText(left, y + 6, labelWidth - 6, Component.literal("Villager Chattiness"), false);
       Button chattiness = Button.builder(Component.literal(chattinessLabel(VillagerNewsSettingsState.chattiness())), button -> {
          VillagerNewsSettingsState.setChattiness(VillagerNewsSettingsState.chattiness() + 1);
@@ -306,7 +317,10 @@ public final class HandbookScreen extends Screen {
          this.addBackButton(left, contentWidth, HandbookScreen.Page.HOME);
       }
    }
-
+   
+private static String heightLabel(int value) {
+      return value == 0 ? "Default" : (value > 0 ? "+" + value + " px up" : (-value) + " px down");
+   }
    private static String toggleLabel(boolean enabled) {
       return enabled ? "On" : "Off";
    }
