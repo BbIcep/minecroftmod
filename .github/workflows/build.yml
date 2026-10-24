@@ -37,12 +37,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: villager-news-client
-          path: build/libs/villager-news-addon-port-client-*[0-9].jar
+          path: build/libs/villager-news-addon-port-client-*-client.jar
 
       - name: Publish as release "client-latest"
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          JAR=$(ls build/libs/villager-news-addon-port-client-*[0-9].jar | head -n 1)
+          JAR=$(ls build/libs/villager-news-addon-port-client-*-client.jar | head -n 1)
           gh release delete client-latest --yes --cleanup-tag || true
           gh release create client-latest "$JAR" --title "Client-only build" --notes "Client-only Villager News. Put the jar into the mods folder."
