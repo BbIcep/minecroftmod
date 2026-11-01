@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
@@ -281,15 +282,7 @@ public final class HandbookScreen extends Screen {
       }).bounds(buttonLeft, y, buttonWidth, 20).build());
       y += 26;
       this.addText(left, y + 6, labelWidth - 6, Component.literal("Subtitle Height"), false);
-      this.addRenderableWidget(Button.builder(Component.literal(heightLabel(VillagerNewsClientSettings.subtitleHeight())), button -> {
-         int next = VillagerNewsClientSettings.subtitleHeight() + 10;
-         if (next > 200) {
-            next = -50;
-         }
-
-         VillagerNewsClientSettings.setSubtitleHeight(next);
-         button.setMessage(Component.literal(heightLabel(next)));
-      }).bounds(buttonLeft, y, buttonWidth, 20).build());
+      this.addRenderableWidget(new HandbookScreen.HeightSlider(buttonLeft, y, buttonWidth, 20));
       y += 26;
       this.addText(left, y + 6, labelWidth - 6, Component.literal("Villager Chattiness"), false);
       Button chattiness = Button.builder(Component.literal(chattinessLabel(VillagerNewsSettingsState.chattiness())), button -> {
@@ -315,6 +308,27 @@ public final class HandbookScreen extends Screen {
          this.addRenderableWidget(Button.builder(Component.literal("Done"), button -> this.onClose()).bounds(left, this.height - 30, contentWidth, 20).build());
       } else {
          this.addBackButton(left, contentWidth, HandbookScreen.Page.HOME);
+      }
+   }
+
+   private static final class HeightSlider extends AbstractSliderButton {
+      private HeightSlider(int x, int y, int width, int height) {
+         super(x, y, width, height, Component.empty(), (VillagerNewsClientSettings.subtitleHeight() + 50) / 250.0);
+         this.updateMessage();
+      }
+
+      private int currentHeight() {
+         return (int)Math.round(this.value * 50.0) * 5 - 50;
+      }
+
+      @Override
+      protected void updateMessage() {
+         this.setMessage(Component.literal(heightLabel(this.currentHeight())));
+      }
+
+      @Override
+      protected void applyValue() {
+         VillagerNewsClientSettings.setSubtitleHeight(this.currentHeight());
       }
    }
 
