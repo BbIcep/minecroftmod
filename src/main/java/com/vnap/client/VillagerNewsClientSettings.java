@@ -15,6 +15,7 @@ public final class VillagerNewsClientSettings {
    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
    private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("villager-news-addon-port-client.json");
    private static boolean showSubtitles = true;
+   private static int subtitleHeight = 0;
 
    private VillagerNewsClientSettings() {
    }
@@ -26,6 +27,7 @@ public final class VillagerNewsClientSettings {
          try {
             JsonObject root = JsonParser.parseString(Files.readString(PATH, StandardCharsets.UTF_8)).getAsJsonObject();
             showSubtitles = !root.has("showSubtitles") || root.get("showSubtitles").getAsBoolean();
+            subtitleHeight = root.has("subtitleHeight") ? Math.max(-50, Math.min(200, root.get("subtitleHeight").getAsInt())) : 0;
          } catch (RuntimeException | IOException var1) {
             VillagerNewsAddonPort.LOGGER.warn("Could not load Villager News client settings; using defaults", var1);
             showSubtitles = true;
@@ -38,6 +40,15 @@ public final class VillagerNewsClientSettings {
       return showSubtitles;
    }
 
+   public static int subtitleHeight() {
+      return subtitleHeight;
+   }
+
+   public static synchronized void setSubtitleHeight(int value) {
+      subtitleHeight = Math.max(-50, Math.min(200, value));
+      save();
+   }
+
    public static synchronized void setShowSubtitles(boolean enabled) {
       showSubtitles = enabled;
       save();
@@ -46,6 +57,7 @@ public final class VillagerNewsClientSettings {
    private static void save() {
       JsonObject root = new JsonObject();
       root.addProperty("showSubtitles", showSubtitles);
+      root.addProperty("subtitleHeight", subtitleHeight);
 
       try {
          Files.createDirectories(PATH.getParent());
